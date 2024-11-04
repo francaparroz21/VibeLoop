@@ -12,15 +12,12 @@ function Navbar() {
     return (
         <header className='bg-[#ffeff9] sticky top-0 w-full items-center justify-between border-b border-gray-100 bg-background p-[2em] font-sans font-semibold uppercase text-text-primary backdrop-blur-[100px] dark:border-gray-800 dark:bg-d-background dark:text-d-text-primary'>
             <nav className='navbar flex items-center justify-between'>
-                {/* Contenedor para el botón de menú */}
                 <div className="flex items-center w-1/3 md:hidden">
-                    {/* Botón de menú hamburguesa (visible solo cuando el menú está oculto) */}
                     <button onClick={() => setIsOpen(!isOpen)} className='flex items-center'>
                         <IoMenu className='h-5 w-5 text-slate-200' />
                     </button>
                 </div>
 
-                {/* Contenedor del logo y los nav items */}
                 <div className={`nav-center flex w-1/3 space-x-5`}>
                     <Link className='nav-link nav-link-home'>
                         <Logo />
@@ -48,7 +45,6 @@ function Navbar() {
                             {cartCount}
                         </span>
                     </div>
-                    {/* Botón para cerrar el menú */}
                     {isOpen && (
                         <button onClick={() => setIsOpen(!isOpen)} className='flex items-center md:hidden'>
                             <IoClose className='h-5 w-5 text-gray-800' />
