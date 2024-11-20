@@ -8,10 +8,20 @@ export const getProducts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+export const createManyProducts = async (req, res) => {
+    const products = req.body;  
+    
+    try {
+      const newProducts = await Product.insertMany(products);
+      res.status(201).json(newProducts);  
+    } catch (error) {
+      res.status(400).json({ message: error.message });  
+    }
+  };
 
 export const createProduct = async (req, res) => {
-  const { name, description, price, stock, imageUrl } = req.body;
-  const product = new Product({ name, description, price, stock, imageUrl });
+  const { title, description, price, stock, imageUrl } = req.body;
+  const product = new Product({ title, description, price, stock, imageUrl });
 
   try {
     const newProduct = await product.save();
