@@ -5,15 +5,16 @@ import { Link } from 'react-router-dom';
 const Shop = () => {
     const { products, loading, addToCartByQuantity, removeProductFromCart, cart } = useContext(ProductContext);
     const [quantities, setQuantities] = useState({});
+    const [selectedColor, setSelectedColor] = useState({}); 
 
     useEffect(() => {
-        // Al cargar el componente, establece las cantidades según el carrito
+        
         const initialQuantities = {};
         cart.forEach((item) => {
-            initialQuantities[item._id] = item.quantity; // Asume que cada elemento del carrito tiene una propiedad `quantity`
+            initialQuantities[item._id] = item.quantity;
         });
         setQuantities(initialQuantities);
-    }, [cart]); // Ejecutar cada vez que cambie el carrito
+    }, [cart]);
 
     if (loading) return <p className="text-center">Cargando productos...</p>;
 
@@ -29,6 +30,28 @@ const Shop = () => {
         });
     };
 
+    
+    const getImageUrl = (product) => {
+        if (typeof product.imagesUrl === 'string') {
+            return product.imagesUrl; 
+        }
+        if (Array.isArray(product.imagesUrl) && product.imagesUrl.length > 0) {
+            
+            const selectedProductColor = selectedColor[product._id] || product.imagesUrl[0].color; 
+            const image = product.imagesUrl.find(image => image.color === selectedProductColor);
+            return image ? image.url : product.imagesUrl[0].url; 
+        }
+        return ''; 
+    }
+
+    
+    const handleColorChange = (productId, color) => {
+        setSelectedColor((prevSelectedColor) => ({
+            ...prevSelectedColor,
+            [productId]: color, 
+        }));
+    };
+
     return (
         <div className="container mx-auto py-16">
             <h2 className="text-3xl font-bold text-center mb-8">Our Products</h2>
@@ -37,20 +60,23 @@ const Shop = () => {
                     const isInCart = cart.some(item => item._id === product._id);
                     const quantity = quantities[product._id] || 1;
 
+                    const imagesUrl = getImageUrl(product); 
+
                     return (
                         <div
                             key={product._id}
                             className="bg-white rounded-lg py-16 shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300"
                         >
                             <img
-                                src={product.imageUrl || `${process.env.PUBLIC_URL}/images/strap1.jpg`}
+                                src={imagesUrl}
                                 alt={product.title}
                                 className="w-full h-48 object-cover"
                             />
                             <div className="p-4">
                                 <h3 className="text-lg font-semibold">{product.title}</h3>
                                 <p className="text-gray-600 mt-2">
-                                    {product.description} <Link to={`../product/${product._id}`} >See more</Link>
+                                    {product.description}{' '}
+                                    <Link to={`../product/${product._id}`}>See more</Link>
                                 </p>
                                 <div className="flex justify-between items-center mt-4">
                                     <span className="text-xl font-bold text-pink-600">${product.price}</span>
@@ -90,6 +116,24 @@ const Shop = () => {
                                         {product.stock === 0 ? 'Sin stock' : isInCart ? 'Remove from Cart' : 'Add to Cart'}
                                     </button>
                                 </div>
+
+                                
+                                {Array.isArray(product.imagesUrl) && product.imagesUrl.length > 1 && (
+                                    <div className="flex mt-4 gap-4">
+                                        <p>Colours: </p>
+                                        {product.imagesUrl.map((image) => (
+                                            <>
+                                                <button
+                                                    key={image.color}
+                                                    onClick={() => handleColorChange(product._id, image.color)}
+                                                    className={`px-4 py-2 rounded-full ${selectedColor[product._id] === image.color ? 'bg-pink-500' : 'bg-gray-300'} text-white`}
+                                                >
+                                                    {image.color}
+                                                </button>
+                                            </>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     );

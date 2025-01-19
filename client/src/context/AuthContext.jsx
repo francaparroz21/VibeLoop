@@ -10,17 +10,38 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   const login = async (emailOrUsername, password) => {
-    setLoading(true);
+    setLoading(true); 
     try {
+      console.log('Sending login request', { emailOrUsername, password });
+
+      
       const response = await loginUser({ emailOrUsername, password });
+
+     
       setUser(response.data.user);
+
+      
       localStorage.setItem('token', response.data.token);
+
+      
+      return response;
     } catch (error) {
-      console.error("Error in login process", error);
+      console.error("Error during login process", error);
+
+      
+      if (error.response && error.response.data) {
+        const backendError = error.response.data.message || 'An error occurred';
+        throw new Error(backendError); 
+      }
+
+      
+      throw new Error('Unable to login. Please try again later.');
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
+
+
   const signup = async (user) => {
     setLoading(true);
     try {

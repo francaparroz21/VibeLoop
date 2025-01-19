@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { validateUserData } from '../validations/user.validation.js';
+import { authenticateToken } from '../middlewares/auth.middleware.js';
 
 dotenv.config();
 
@@ -10,7 +11,7 @@ export const logoutUser = async (req, res) => {
   try {
     res.clearCookie('token', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', 
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       path: '/'
     });
@@ -63,29 +64,40 @@ export const registerUser = async (req, res) => {
   }
 };
 
+
 export const loginUser = async (req, res) => {
   const { emailOrUsername, password } = req.body;
 
   try {
+    
     const user = await User.findOne({
       $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
     });
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(400).json({ errors: { form: 'Invalid credentials.' } });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials (user not found)' });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ message: 'Invalid credentials (wrong password)' });
+    }
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 3600 * 1000,
+    
+    const token = jwt.sign(
+      { userId: user._id, username: user.username }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: '1h' } 
+    );
+
+    
+    res.status(200).json({
+      token,
+      user: { id: user._id, username: user.username, email: user.email },
     });
-
-    res.json({ message: 'Logged in successfully', user: { id: user._id, username: user.username } });
   } catch (error) {
-    res.status(500).json({ message: 'An error occurred during login.' });
+    console.error(error);
+    res.status(500).json({ message: 'Something went wrong' });
   }
 };

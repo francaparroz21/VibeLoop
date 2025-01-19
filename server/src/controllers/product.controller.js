@@ -9,27 +9,36 @@ export const getProducts = async (req, res) => {
   }
 };
 export const createManyProducts = async (req, res) => {
-    const products = req.body;  
-    
-    try {
-      const newProducts = await Product.insertMany(products);
-      res.status(201).json(newProducts);  
-    } catch (error) {
-      res.status(400).json({ message: error.message });  
-    }
-  };
+  const products = req.body;
+
+  try {
+    const newProducts = await Product.insertMany(products);
+    res.status(201).json(newProducts);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 export const createProduct = async (req, res) => {
-  const { title, description, price, stock, imageUrl } = req.body;
-  const product = new Product({ title, description, price, stock, imageUrl });
+  console.log("Incoming request body:", req.body); 
+
+  const { title, description, price, stock, imagesUrl } = req.body;
+
+  if (!title || !description || !price || !stock || !imagesUrl) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  const product = new Product({ title, description, price, stock, imagesUrl });
 
   try {
     const newProduct = await product.save();
     res.status(201).json(newProduct);
   } catch (error) {
+    console.error("Error creating product:", error.message);
     res.status(400).json({ message: error.message });
   }
 };
+
 
 export const getProductById = async (req, res) => {
   try {

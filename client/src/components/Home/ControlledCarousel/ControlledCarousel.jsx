@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
-import { ExampleCarouselImage } from '../ExampleCarouselImage/ExampleCarouselImage';
 
 function ControlledCarousel() {
   const [index, setIndex] = useState(0);
@@ -10,28 +9,32 @@ function ControlledCarousel() {
   };
 
   return (
-    <div className="mt-20 min-h-[40vh]" style={{ width: '100%' }}>
-      <Carousel activeIndex={index} onSelect={handleSelect}>
-        <Carousel.Item>
-          <ExampleCarouselImage text="First slide" imageUrl={'/images/bannerexample.png'} />
-          <Carousel.Caption>
-            <h3>First slide label</h3>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-          </Carousel.Caption>
+    <div className="min-h-screen w-full overflow-hidden m-0 p-0">
+      <Carousel
+        activeIndex={index}
+        onSelect={handleSelect}
+        className="rounded-none w-full bg-transparent"
+      >
+        <Carousel.Item className="h-screen">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/asdd-e8832.appspot.com/o/banner%2Fbanner.png?alt=media&token=0cca48c2-381f-43e3-932d-1ab9b6cc1a78"
+            alt="First slide"
+            className="w-full h-screen object-cover"
+          />
         </Carousel.Item>
-        <Carousel.Item>
-          <ExampleCarouselImage text="Second slide" imageUrl={'/images/bannerexample.png'} />
-          <Carousel.Caption>
-            <h3>Second slide label</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          </Carousel.Caption>
+        <Carousel.Item className="h-screen">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/asdd-e8832.appspot.com/o/banner%2Fbanner.png?alt=media&token=0cca48c2-381f-43e3-932d-1ab9b6cc1a78"
+            alt="Second slide"
+            className="w-full h-screen object-cover"
+          />
         </Carousel.Item>
-        <Carousel.Item>
-          <ExampleCarouselImage text="Third slide" imageUrl={'/images/bannerexample.png'} />
-          <Carousel.Caption>
-            <h3>Third slide label</h3>
-            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-          </Carousel.Caption>
+        <Carousel.Item className="h-screen">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/asdd-e8832.appspot.com/o/banner%2Fbanner.png?alt=media&token=0cca48c2-381f-43e3-932d-1ab9b6cc1a78"
+            alt="Third slide"
+            className="w-full h-screen object-cover"
+          />
         </Carousel.Item>
       </Carousel>
     </div>

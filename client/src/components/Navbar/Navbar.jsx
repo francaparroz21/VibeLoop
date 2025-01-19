@@ -6,33 +6,33 @@ import { IoMdPerson } from "react-icons/io";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { MdLogout } from "react-icons/md";
 import { ProductContext } from '../../context/ProductContext';
-import { AuthContext } from '../../context/AuthContext'; 
-import { Button, Dialog, DialogDismiss, DialogHeading } from "@ariakit/react"; 
+import { AuthContext } from '../../context/AuthContext';
+import { Button, Dialog, DialogDismiss, DialogHeading } from "@ariakit/react";
 import '../../index.css'
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [cartOpen, setCartOpen] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false); 
+    const [modalOpen, setModalOpen] = useState(false);
 
     const { cart, updateCartQuantity, removeFromCart } = useContext(ProductContext);
-    const { user, logout } = useContext(AuthContext); 
+    const { user, logout } = useContext(AuthContext);
 
     const cartCount = cart.length;
 
     const totalAmount = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
     const handleLogout = () => {
-        setModalOpen(true); 
+        setModalOpen(true);
     };
 
     const confirmLogout = () => {
         logout();
-        setModalOpen(false); 
+        setModalOpen(false);
     };
 
     const cancelLogout = () => {
-        setModalOpen(false); 
+        setModalOpen(false);
     };
 
     const handleRemoveFromCart = (itemId) => {
@@ -58,25 +58,25 @@ const Navbar = () => {
                     </Link>
                     <div className="hidden md:flex md:items-center">
                         <ul className="flex flex-col gap-5 mt-4 md:flex-row md:mt-0">
-                            <NavLink to='/' className='nav-item-li transition duration-800 ease-in-out hover:text-[#8ae083]'>
-                                <li>Home</li>
+                            <NavLink to='/' className='nav-item-li no-underline text-black transition duration-800 ease-in-out '>
+                                <li className='hover:text-pink-400 transition-all'>Home</li>
                             </NavLink>
-                            <NavLink to='/shop' className='nav-item-li transition duration-800 ease-in-out hover:text-[#8ae083]'>
-                                <li>Shop</li>
+                            <NavLink to='/shop' className='nav-item-li no-underline text-black transition duration-800 ease-in-out hover:text-[#8ae083]'>
+                                <li className= 'hover:text-pink-400 transition-all'>Shop</li>
                             </NavLink>
-                            <NavLink to='/contact' className='nav-item-li transition duration-800 ease-in-out hover:text-[#8ae083]'>
-                                <li>Contact</li>
+                            <NavLink to='/contact' className='nav-item-li no-underline text-black transition duration-800 ease-in-out hover:text-[#8ae083]'>
+                                <li className='hover:text-pink-400 transition-all'>Contact</li>
                             </NavLink>
                         </ul>
                     </div>
                 </div>
 
                 <div className="nav-right my-auto flex gap-1 relative w-1/3 justify-end items-center">
-                    {user && <span>Hello, <span className='text-green-500'>{user.username}</span></span>}
+                    {user && <span>Hello, <span className='text-pink-400'>{user.username}</span></span>}
                     <div className='p-2 cursor-pointer rounded-full transition duration-200 ease-in-out hover:bg-[#d3cfcf]'>
                         {user ? (
                             <button
-                                onClick={handleLogout} 
+                                onClick={handleLogout}
                                 className='text-black flex items-center'
                             >
                                 <MdLogout className='text-[30px]' />
@@ -101,7 +101,7 @@ const Navbar = () => {
 
             <Dialog
                 open={modalOpen}
-                onClose={() => setModalOpen(false)} 
+                onClose={() => setModalOpen(false)}
                 className="dialog"
             >
                 <DialogHeading className="heading">Are you sure to log out?</DialogHeading>
@@ -125,7 +125,7 @@ const Navbar = () => {
                         <ul>
                             {cart.map(item => (
                                 <li key={item._id} className="flex flex-wrap items-center justify-between gap-4 mb-4 p-2 border-b border-gray-200">
-                                    <img src={item.imageUrl} alt={item.title} className="w-12 h-12 object-cover rounded" />
+                                    <img src={item.imagesUrl } alt={item.title} className="w-12 h-12 object-cover rounded" />
                                     <div className="flex flex-col flex-grow">
                                         <p className="text-sm font-semibold">{item.title}</p>
                                         <div className="flex items-center gap-2 mt-1">
@@ -166,7 +166,7 @@ const Navbar = () => {
                             <span>${totalAmount.toFixed(2)}</span>
                         </div>
                         <div className='text-center'>
-                            <Link to={'../../checkout'} className='btn-checkout w-full py-2 px-4 mt-4 text-white font-semibold uppercase bg-[#8ae083] rounded-lg hover:bg-green-600 transition duration-300'>
+                            <Link to={'../../checkout'} onClick={() => setCartOpen(false)} className='btn-checkout w-full py-2 px-4 mt-4 text-white font-semibold uppercase bg-[#8ae083] rounded-lg hover:bg-green-600 transition duration-300'>
                                 Checkout
                             </Link>
                         </div>

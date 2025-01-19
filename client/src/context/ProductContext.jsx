@@ -1,5 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { getAllProducts, postProduct } from '../api/products';
+import {createPayment} from '../api/payment'
+
 
 export const ProductContext = createContext();
 
@@ -34,9 +36,20 @@ export const ProductProvider = ({ children }) => {
     );
   };
 
+  const paymentIntentContext = async (total) => {
+    try {
+      const response = await createPayment(total)
+      return response.data;  
+    } catch (error) {
+      console.log("Payment error", error);
+      throw error; 
+    }
+  }
+  
   const addProduct = async (newProduct) => {
     try {
       const response = await postProduct(newProduct);
+      console.log(response)
       setProducts(prevProducts => [...prevProducts, response.data]);
     } catch (error) {
       console.error("Error al agregar producto:", error);
@@ -46,11 +59,14 @@ export const ProductProvider = ({ children }) => {
   const addToCartByQuantity = (product, quantity) => {
     const existingProduct = cart.find(item => item._id === product._id);
     if (existingProduct) {
-        updateCartQuantity(product._id, existingProduct.quantity + quantity);
+      updateCartQuantity(product._id, existingProduct.quantity + quantity);
     } else {
-        setCart([...cart, { ...product, quantity }]);
+      setCart([...cart, { ...product, quantity }]);
     }
-};
+  };
+  const clearCart = () => {
+    setCart([]);
+  };
 
 
   const addProductToCart = (product) => {
@@ -86,9 +102,11 @@ export const ProductProvider = ({ children }) => {
       addProduct,
       addProductToCart,
       removeProductFromCart,
+      clearCart,
       updateCartQuantity,
       removeFromCart,
-      addToCartByQuantity
+      addToCartByQuantity,
+      paymentIntentContext
     }}>
       {children}
     </ProductContext.Provider>

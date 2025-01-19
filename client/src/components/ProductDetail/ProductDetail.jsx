@@ -13,12 +13,11 @@ const ProductDetail = () => {
         setProduct(selectedProduct);
 
         if (selectedProduct) {
-            
             const cartItem = cart.find(item => item._id === selectedProduct._id);
             if (cartItem) {
-                setQuantity(cartItem.quantity); 
+                setQuantity(cartItem.quantity);
             } else {
-                setQuantity(1); 
+                setQuantity(1);
             }
         }
     }, [id, products, cart]);
@@ -40,7 +39,7 @@ const ProductDetail = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex justify-center mb-4 md:mb-0">
                     <img
-                        src={product.imageUrl}
+                        src={product.imagesUrl}
                         alt={product.title}
                         className="w-full h-auto rounded-lg shadow-lg object-cover"
                     />
@@ -54,7 +53,7 @@ const ProductDetail = () => {
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => handleQuantityChange('decrement')}
-                            disabled={isInCart} 
+                            disabled={isInCart}
                             className={`px-4 py-2 ${isInCart ? 'bg-gray-200' : 'bg-gray-300 hover:bg-gray-400'} rounded-lg`}
                         >
                             -
@@ -62,7 +61,7 @@ const ProductDetail = () => {
                         <span className="text-xl">{quantity}</span>
                         <button
                             onClick={() => handleQuantityChange('increment')}
-                            disabled={isInCart} 
+                            disabled={isInCart}
                             className={`px-4 py-2 ${isInCart ? 'bg-gray-200' : 'bg-gray-300 hover:bg-gray-400'} rounded-lg`}
                         >
                             +

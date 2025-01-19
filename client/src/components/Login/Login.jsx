@@ -1,14 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { Bounce, toast } from 'react-toastify'; 
-import 'react-toastify/dist/ReactToastify.css'; 
+import { Bounce, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = () => {
     const { login } = useContext(AuthContext);
     const [formData, setFormData] = useState({ emailOrUsername: '', password: '' });
     const [errors, setErrors] = useState({});
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -18,34 +18,18 @@ const LoginForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrors({});
-
         try {
-            await login(formData.emailOrUsername, formData.password);
-            toast.success('Login succesfully!', {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                pauseOnFocusLoss: false,
-                transition: Bounce
-                });
-
-            navigate('/');
-
-        } catch (err) {
-            if (err.response && err.response.data) {
-                const backendErrors = err.response.data.errors || { form: err.response.data.message };
-                setErrors(backendErrors);
-            } else {
-                setErrors({ form: 'An unexpected error occurred. Please try again.' });
-            }
+            const response = await login(formData.emailOrUsername, formData.password);
+            toast.success('Login successful!');
+            navigate('/'); 
+        } catch (error) {
+            toast.error(error.message); 
         }
     };
+    
+
+
+
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-pink-100">
@@ -68,9 +52,8 @@ const LoginForm = () => {
                         name="emailOrUsername"
                         value={formData.emailOrUsername}
                         onChange={handleInputChange}
-                        className={`w-full px-4 py-2 border ${
-                            errors.emailOrUsername ? 'border-red-500' : 'border-gray-300'
-                        } rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400`}
+                        className={`w-full px-4 py-2 border ${errors.emailOrUsername ? 'border-red-500' : 'border-gray-300'
+                            } rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400`}
                         placeholder="Enter your email or username"
                         required
                     />
@@ -92,9 +75,8 @@ const LoginForm = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        className={`w-full px-4 py-2 border ${
-                            errors.password ? 'border-red-500' : 'border-gray-300'
-                        } rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400`}
+                        className={`w-full px-4 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'
+                            } rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400`}
                         placeholder="Enter your password"
                         required
                     />

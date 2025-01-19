@@ -15,6 +15,7 @@ import ForgotPassword from './components/ForgotPassword/ForgotPassword.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { ToastContainer } from 'react-toastify';
 import AdminPanel from './components/AdminPanel/AdminPanel.jsx';
+import FloatingWhatsapp from './components/FloatingWhatsapp/FloatingWhatsapp.jsx';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <AuthProvider>
           <ProductProvider>
             <Navbar />
+            <FloatingWhatsapp />
             <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/shop' element={<Shop />} />
